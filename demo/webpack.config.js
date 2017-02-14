@@ -1,41 +1,47 @@
 /* eslint-disable filenames/match-regex, import/no-commonjs */
 
 const path = require('path');
+//const webpack = require('webpack');
+
 const context = path.resolve(__dirname, 'src');
 
 module.exports = {
   context,
-  entry: './index.js',
+  //context: path.resolve(__dirname, './src'),
+  entry: {  
+   main: './index.js'
+  },
+  output: {
+    //path: path.resolve(__dirname, './dist'),
+    filename: '[name].js'
+  },
   module: {
-    loaders: [
+    rules: [
       {
-        include: path.resolve(__dirname, './src'),
-        loaders: [
+        //include: path.resolve(__dirname, './src'),
+        test: /\.css$/,
+        use: [
           'style-loader',
           'css-loader?importLoader=1&modules&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
-        ],
-        test: /\.css$/
+        ]
       },
       {
-        include: path.resolve(__dirname, './src'),
+        //include: path.resolve(__dirname, './src'),
+        test: /\.js$/,
         loader: 'babel-loader',
-        query: {
+        options: {
           plugins: [
             'transform-react-jsx',
             [
               'react-css-modules',
               {
-                context
+                context // Without this line the demo does not work!!!
               }
             ]
           ]
-        },
-        test: /\.js$/
+        }
       }
     ]
-  },
-  output: {
-    filename: '[name].js'
   },
   stats: 'minimal'
 };
